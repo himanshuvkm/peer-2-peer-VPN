@@ -16,7 +16,7 @@ const client = new MongoClient(MONGO_URI);
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-const JWT_SECRET = process.env.JWT_SECRET 
+const JWT_SECRET = process.env.JWT_SECRET
 
 let db;
 
@@ -41,7 +41,7 @@ app.post("/auth/register", async (req, res) => {
     const result = await db.collection("users").insertOne({
       email,
       password: hashedPassword,
-      role, 
+      role,
       created_at: new Date()
     });
 
@@ -50,8 +50,8 @@ app.post("/auth/register", async (req, res) => {
     if (role === "client") {
       await db.collection("clients").insertOne({
         user_id: userId,
-        email, 
-        full_name: "", 
+        email,
+        full_name: "",
         created_at: new Date()
       });
     } else if (role === "provider") {
@@ -125,7 +125,7 @@ app.post("/api/provider/update", authenticateToken, async (req, res) => {
 app.post("/api/client/update", authenticateToken, async (req, res) => {
   if (req.user.role !== 'client') return res.sendStatus(403);
 
-  const { full_name } = req.body; 
+  const { full_name } = req.body;
   try {
     await db.collection("clients").updateOne(
       { user_id: new ObjectId(req.user.userId) },
